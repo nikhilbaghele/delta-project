@@ -26,7 +26,7 @@ main()
     .then(() => {
         console.log("connected to DB");
     })
-    .catch(() => {
+    .catch((err) => {
         console.log(err);
     });
 async function main() {
@@ -53,6 +53,7 @@ store.on("error", () => {
 });
 
 const sessionOptions = {
+    store,
     secret: process.env.SECRET,
     resave: false,
     saveUninitialized: true,
@@ -62,10 +63,6 @@ const sessionOptions = {
         httpOnly: true
     }
 };
-
-// app.get("/", (req, res) => {
-//     res.send("Hii, I am root");
-// });
 
 app.use(session(sessionOptions));
 app.use(flash());
@@ -83,15 +80,6 @@ app.use((req, res, next) => {
     res.locals.currUser = req.user;
     next();
 });
-
-// app.get("/demouser", async (req, res) => {
-//     let fakeUser = new User({
-//         email: "student@gmail.com",
-//         username: "delta-student"
-//     });
-//     let registeredUser = await User.register(fakeUser, "helloworld");
-//     res.send(registeredUser);
-// });
 
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
